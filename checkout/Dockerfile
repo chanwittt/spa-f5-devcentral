@@ -18,11 +18,11 @@ RUN npm prune --production
 FROM base as test
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY ./ ./
 
-RUN npm run test:unit
+CMD ["npm", "run", "test:unit"]
 
 
 # --------- Release ---------
