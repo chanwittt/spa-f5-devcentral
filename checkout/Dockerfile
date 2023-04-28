@@ -14,6 +14,17 @@ COPY ./ ./
 
 RUN npm prune --production 
 
+#------------test------
+FROM base as test
+COPY package*.json ./
+
+RUN npm install
+
+COPY ./ ./
+
+RUN npm run test:unit
+
+
 # --------- Release ---------
 FROM base as release
 

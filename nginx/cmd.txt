@@ -1,1 +1,1 @@
-docker run -d -p80:80 --name nginx-spa --network=mynet nginx-spa
+docker run -d -p80:80 --name nginx-spa --network=spa-f5-devcentral_mynet nginx-spa
