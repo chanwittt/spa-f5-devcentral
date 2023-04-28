@@ -1,0 +1,85 @@
+version: "3.3"
+services:
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-seed:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    environment:
+      - SEED_FILE=${PRODUCT_TYPE}Products.json
+
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "8000:8000"
+    links:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb
+      - INVENTORY_URL=http://inventory:8002
+      - RECOMMENDATIONS_URL=http://recommendations:8001
+      - IMAGE_DIRECTORY=${PRODUCT_TYPE}
+    dns:
+      - 10.1.1.6
+    restart: unless-stopped
+
+  spa:
+    build:
+      context: ./spa
+      args:
+        VITE_APP_GLOBAL_COLOR: "#000"
+        VITE_APP_GLOBAL_BACKGROUND_COLOR: "#FFF"
+    container_name: spa
+    ports:
+      - "8081:80"
+    links:
+      - api
+    restart: unless-stopped
+
+  spa-dark:
+    build:
+      context: ./spa
+      args:
+        VITE_APP_GLOBAL_COLOR: "#FFF"
+        VITE_APP_GLOBAL_BACKGROUND_COLOR: "#000"
+    container_name: spa-dark
+    ports:
+      - "8082:80"
+    links:
+      - api
+    restart: unless-stopped
+
+  recommendations:
+    build:
+      context: .
+      dockerfile: ./recommendations/Dockerfile
+    container_name: recs
+    ports:
+      - "8001:8001"
+    links:
+      - api
+    environment:
+      - SEED_FILE=${PRODUCT_TYPE}Products.json
+    restart: unless-stopped
+
+  inventory:
+    build: ./inventory
+    container_name: inv
+    ports:
+      - "8002:8002"
+    links:
+      - api
+    restart: unless-stopped
+
+  checkout:
+    build: ./checkout
+    container_name: checkout
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
+networks:
+  mynet: 
