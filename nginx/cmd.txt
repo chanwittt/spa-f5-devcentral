@@ -1,1 +1,5 @@
-docker run -d -p80:80 --name nginx-spa --network=spa-f5-devcentral_mynet nginx-spa
+docker run -d -p8080:8080 --name nginx-spa --network=spa-f5-devcentral_mynet nginx-spa
+
+unit test
+docker build -t checkout-test --target test .
+docker run -it --rm checkout-test
