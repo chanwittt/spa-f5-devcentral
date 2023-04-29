@@ -10,4 +10,4 @@ docker run --detach \
   gitlab/gitlab-ee:latest
 
 
-  sudo gitlab-runner register -n --url http://192.168.1.106:8080/ --registration-token GR1348941n3ysYiLjSiQe_aCe68Rh --executor docker --description "Deployment Runner" --docker-image "docker:stable" --tag-list deployment --docker-privileged
+  sudo gitlab-runner register -n --url http://192.168.1.106/ --registration-token GR1348941n3ysYiLjSiQe_aCe68Rh --executor docker --description "Deployment Runner" --docker-image "docker:stable" --tag-list deployment --docker-privileged
